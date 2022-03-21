@@ -78,7 +78,7 @@ class AccountSpecification extends BaseApplicationSpecification {
         )
     }
 
-    def "should return an account by number with different currency"() {
+    def "should not allow to return an account by number with currency different than the base one"() {
         given:
         def accountNumberValue = "75 1240 2034 1111 0000 0306 8582"
         def accountNumberUrlEncoded = URLEncoder.encode(accountNumberValue, StandardCharsets.UTF_8)
@@ -90,6 +90,65 @@ class AccountSpecification extends BaseApplicationSpecification {
         response.getStatusLine().getStatusCode() == 400
         transformError(response).message() == "Cannot convert currency from EUR to PLN."
     }
+
+    def "should return an account by number with different currency"() {
+        given:
+        def accountNumberValue = "65 1090 1665 0000 0001 0373 7343"
+        def accountNumberUrlEncoded = URLEncoder.encode(accountNumberValue, StandardCharsets.UTF_8)
+        def currency = "EUR"
+
+        when:
+        Account response = get("/accounts/number=${accountNumberUrlEncoded}?currency=${currency}", Account)
+
+        then:
+        response == new Account(
+                Account.Id.of("fa07c538-8ce4-11ec-9ad5-4f5a625cd744"),
+                Account.Number.of(accountNumberValue),
+                Money.of("27.16", currency)
+        )
+    }
+
+    def "should return an account by ID with unmodified amount for the same currencies pair"() {
+        given:
+        def accountNumberUrlEncoded = URLEncoder.encode(accountNumber, StandardCharsets.UTF_8)
+
+        when:
+        Account response = get("/accounts/${accountId}?currency=${currency}", Account)
+
+        then:
+        response == new Account(
+                Account.Id.of(accountId),
+                Account.Number.of(accountNumber),
+                Money.of(amount, currency)
+        )
+
+        where:
+        accountId                              | accountNumber                      | currency | amount
+        "fa07c538-8ce4-11ec-9ad5-4f5a625cd744" | "65 1090 1665 0000 0001 0373 7343" | "PLN"    | "123.45"
+        "78743420-8ce9-11ec-b0d0-57b77255c208" | "75 1240 2034 1111 0000 0306 8582" | "EUR"    | "456.78"
+    }
+
+
+    def "should return an account by number with unmodified amount for the same currencies pair"() {
+        given:
+        def accountNumberUrlEncoded = URLEncoder.encode(accountNumber, StandardCharsets.UTF_8)
+
+        when:
+        Account response = get("/accounts/number=${accountNumberUrlEncoded}?currency=${currency}", Account)
+
+        then:
+        response == new Account(
+                Account.Id.of(accountId),
+                Account.Number.of(accountNumber),
+                Money.of(amount, currency)
+        )
+
+        where:
+        accountId                              | accountNumber                      | currency | amount
+        "fa07c538-8ce4-11ec-9ad5-4f5a625cd744" | "65 1090 1665 0000 0001 0373 7343" | "PLN"    | "123.45"
+        "78743420-8ce9-11ec-b0d0-57b77255c208" | "75 1240 2034 1111 0000 0306 8582" | "EUR"    | "456.78"
+    }
+
 
     def "should not find an account by ID"() {
         given:
