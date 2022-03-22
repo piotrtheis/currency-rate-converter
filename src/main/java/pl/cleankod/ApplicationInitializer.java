@@ -1,9 +1,11 @@
 package pl.cleankod;
 
-import feign.Feign;
+import feign.Logger;
 import feign.httpclient.ApacheHttpClient;
+import feign.hystrix.HystrixFeign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
+import feign.slf4j.Slf4jLogger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -37,10 +39,12 @@ public class ApplicationInitializer {
     @Bean
     ExchangeRatesNbpClient exchangeRatesNbpClient(Environment environment) {
         String nbpApiBaseUrl = environment.getRequiredProperty("provider.nbp-api.base-url");
-        return Feign.builder()
+        return HystrixFeign.builder()
                 .client(new ApacheHttpClient())
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
+                .logLevel(Logger.Level.FULL)
+                .logger(new Slf4jLogger(ExchangeRatesNbpClient.class))
                 .target(ExchangeRatesNbpClient.class, nbpApiBaseUrl);
     }
 
