@@ -4,6 +4,9 @@ plugins {
     // Apply the groovy plugin to also add support for Groovy (needed for Spock)
     id 'groovy'
     id 'org.unbroken-dome.test-sets' version '4.0.0'
+
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("io.micronaut.application") version "3.3.0"
 }
 
 repositories {
@@ -32,6 +35,26 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
+    annotationProcessor("io.micronaut:micronaut-http-validation")
+    annotationProcessor("io.micronaut.spring:micronaut-spring-annotation")
+    annotationProcessor("io.micronaut.spring:micronaut-spring-boot")
+    annotationProcessor("io.micronaut.spring:micronaut-spring-web-annotation")
+    implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut:micronaut-http-server")
+    implementation("io.micronaut:micronaut-jackson-databind")
+    implementation("io.micronaut:micronaut-runtime")
+    implementation("jakarta.annotation:jakarta.annotation-api")
+    implementation("org.springframework.boot:spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("io.micronaut.spring:micronaut-spring-boot")
+    runtimeOnly("io.micronaut.spring:micronaut-spring-web")
+    testAnnotationProcessor("io.micronaut.spring:micronaut-spring-annotation")
+    testAnnotationProcessor("io.micronaut.spring:micronaut-spring-boot")
+    testAnnotationProcessor("io.micronaut.spring:micronaut-spring-web-annotation")
+    implementation("io.micronaut:micronaut-validation")
+    implementation "io.micronaut:micronaut-http-server-netty"
+
     implementation 'org.springframework.boot:spring-boot-starter-web:2.6.3'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
     implementation 'io.github.openfeign:feign-httpclient:11.8'
@@ -54,6 +77,21 @@ dependencies {
     integrationTestImplementation 'org.spockframework:spock-core:2.0-groovy-3.0'
     integrationTestImplementation 'org.apache.httpcomponents:httpclient:4.5.13'
 }
+
+application {
+    mainClass.set("pl.cleankod.ApplicationInitializer")
+}
+
+graalvmNative.toolchainDetection = false
+micronaut {
+    runtime("netty")
+    testRuntime("junit5")
+    processing {
+        incremental(true)
+        annotations("pl.cleankod.*")
+    }
+}
+
 
 
 tasks.named('test') {

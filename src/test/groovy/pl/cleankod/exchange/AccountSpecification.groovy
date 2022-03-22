@@ -35,6 +35,7 @@ class AccountSpecification extends BaseApplicationSpecification {
         def accountId = "fa07c538-8ce4-11ec-9ad5-4f5a625cd744"
 
         when:
+        Thread.sleep(15000)
         AccountViewModel response = get("/accounts/${accountId}", AccountViewModel)
 
         then:

@@ -1,20 +1,11 @@
 package pl.cleankod;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.Import;
-import pl.cleankod.exchange.config.ExchangeConfiguration;
-import pl.cleankod.exchange.config.OpenApiConfiguration;
+import io.micronaut.runtime.Micronaut;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootConfiguration
-@EnableAutoConfiguration
-@Import({
-        ExchangeConfiguration.class,
-        OpenApiConfiguration.class
-})
+@SpringBootApplication
 public class ApplicationInitializer {
     public static void main(String[] args) {
-        SpringApplication.run(ApplicationInitializer.class, args);
+        Micronaut.run(ApplicationInitializer.class, args);
     }
 }

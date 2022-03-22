@@ -8,7 +8,6 @@ import feign.jackson.JacksonEncoder;
 import feign.slf4j.Slf4jLogger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import pl.cleankod.exchange.core.gateway.AccountRepository;
 import pl.cleankod.exchange.core.gateway.CurrencyConversionService;
@@ -37,21 +36,17 @@ public class ExchangeConfiguration {
     }
 
     @Bean
-    ExchangeRatesNbpClient exchangeRatesNbpClient(Environment environment) {
+    ExchangeRatesNbpClient exchangeRatesNbpClient(Environment environment,  Cache<String, RateWrapper> cache) {
         String nbpApiBaseUrl = environment.getRequiredProperty("provider.nbp-api.base-url");
-        return HystrixFeign.builder()
+        var client = HystrixFeign.builder()
                 .client(new ApacheHttpClient())
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
                 .logLevel(Logger.Level.FULL)
                 .logger(new Slf4jLogger(ExchangeRatesNbpClient.class))
                 .target(ExchangeRatesNbpClient.class, nbpApiBaseUrl);
-    }
 
-    @Primary
-    @Bean
-    ExchangeRatesNbpClient cachedExchangeClient(ExchangeRatesNbpClient nbpClient, Cache<String, RateWrapper> cache) {
-        return new CachedExchangeRatesNbpClient(nbpClient, cache);
+        return new CachedExchangeRatesNbpClient(client, cache);
     }
 
     @Bean
