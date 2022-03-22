@@ -5,8 +5,7 @@ import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import org.apache.http.HttpResponse
 import pl.cleankod.BaseApplicationSpecification
-import pl.cleankod.exchange.core.domain.Account
-import pl.cleankod.exchange.core.domain.Money
+import pl.cleankod.exchange.entrypoint.model.AccountViewModel
 
 import java.nio.charset.StandardCharsets
 
@@ -36,13 +35,13 @@ class AccountSpecification extends BaseApplicationSpecification {
         def accountId = "fa07c538-8ce4-11ec-9ad5-4f5a625cd744"
 
         when:
-        Account response = get("/accounts/${accountId}", Account)
+        AccountViewModel response = get("/accounts/${accountId}", AccountViewModel)
 
         then:
-        response == new Account(
-                Account.Id.of(accountId),
-                Account.Number.of("65 1090 1665 0000 0001 0373 7343"),
-                Money.of("123.45", "PLN")
+        response == new AccountViewModel(
+                accountId,
+                "65 1090 1665 0000 0001 0373 7343",
+                new AccountViewModel.BalanceViewModel(123.45, "PLN")
         )
     }
 
@@ -52,13 +51,13 @@ class AccountSpecification extends BaseApplicationSpecification {
         def currency = "EUR"
 
         when:
-        Account response = get("/accounts/${accountId}?currency=${currency}", Account)
+        AccountViewModel response = get("/accounts/${accountId}?currency=${currency}", AccountViewModel)
 
         then:
-        response == new Account(
-                Account.Id.of(accountId),
-                Account.Number.of("65 1090 1665 0000 0001 0373 7343"),
-                Money.of("27.16", currency)
+        response == new AccountViewModel(
+                accountId,
+                "65 1090 1665 0000 0001 0373 7343",
+                new AccountViewModel.BalanceViewModel(27.16, currency)
         )
     }
 
@@ -68,13 +67,13 @@ class AccountSpecification extends BaseApplicationSpecification {
         def accountNumberUrlEncoded = URLEncoder.encode(accountNumberValue, StandardCharsets.UTF_8)
 
         when:
-        Account response = get("/accounts/number=${accountNumberUrlEncoded}", Account)
+        AccountViewModel response = get("/accounts/number=${accountNumberUrlEncoded}", AccountViewModel)
 
         then:
-        response == new Account(
-                Account.Id.of("78743420-8ce9-11ec-b0d0-57b77255c208"),
-                Account.Number.of(accountNumberValue),
-                Money.of("456.78", "EUR")
+        response == new AccountViewModel(
+                "78743420-8ce9-11ec-b0d0-57b77255c208",
+                accountNumberValue,
+                new AccountViewModel.BalanceViewModel(456.78, "EUR")
         )
     }
 
@@ -98,34 +97,31 @@ class AccountSpecification extends BaseApplicationSpecification {
         def currency = "EUR"
 
         when:
-        Account response = get("/accounts/number=${accountNumberUrlEncoded}?currency=${currency}", Account)
+        AccountViewModel response = get("/accounts/number=${accountNumberUrlEncoded}?currency=${currency}", AccountViewModel)
 
         then:
-        response == new Account(
-                Account.Id.of("fa07c538-8ce4-11ec-9ad5-4f5a625cd744"),
-                Account.Number.of(accountNumberValue),
-                Money.of("27.16", currency)
+        response == new AccountViewModel(
+                "fa07c538-8ce4-11ec-9ad5-4f5a625cd744",
+                accountNumberValue,
+                new AccountViewModel.BalanceViewModel(27.16, currency)
         )
     }
 
     def "should return an account by ID with unmodified amount for the same currencies pair"() {
-        given:
-        def accountNumberUrlEncoded = URLEncoder.encode(accountNumber, StandardCharsets.UTF_8)
-
         when:
-        Account response = get("/accounts/${accountId}?currency=${currency}", Account)
+        AccountViewModel response = get("/accounts/${accountId}?currency=${currency}", AccountViewModel)
 
         then:
-        response == new Account(
-                Account.Id.of(accountId),
-                Account.Number.of(accountNumber),
-                Money.of(amount, currency)
+        response == new AccountViewModel(
+                accountId,
+                accountNumber,
+                new AccountViewModel.BalanceViewModel(amount, currency)
         )
 
         where:
         accountId                              | accountNumber                      | currency | amount
-        "fa07c538-8ce4-11ec-9ad5-4f5a625cd744" | "65 1090 1665 0000 0001 0373 7343" | "PLN"    | "123.45"
-        "78743420-8ce9-11ec-b0d0-57b77255c208" | "75 1240 2034 1111 0000 0306 8582" | "EUR"    | "456.78"
+        "fa07c538-8ce4-11ec-9ad5-4f5a625cd744" | "65 1090 1665 0000 0001 0373 7343" | "PLN"    | 123.45
+        "78743420-8ce9-11ec-b0d0-57b77255c208" | "75 1240 2034 1111 0000 0306 8582" | "EUR"    | 456.78
     }
 
 
@@ -134,19 +130,19 @@ class AccountSpecification extends BaseApplicationSpecification {
         def accountNumberUrlEncoded = URLEncoder.encode(accountNumber, StandardCharsets.UTF_8)
 
         when:
-        Account response = get("/accounts/number=${accountNumberUrlEncoded}?currency=${currency}", Account)
+        AccountViewModel response = get("/accounts/number=${accountNumberUrlEncoded}?currency=${currency}", AccountViewModel)
 
         then:
-        response == new Account(
-                Account.Id.of(accountId),
-                Account.Number.of(accountNumber),
-                Money.of(amount, currency)
+        response == new AccountViewModel(
+                accountId,
+                accountNumber,
+                new AccountViewModel.BalanceViewModel(amount, currency)
         )
 
         where:
         accountId                              | accountNumber                      | currency | amount
-        "fa07c538-8ce4-11ec-9ad5-4f5a625cd744" | "65 1090 1665 0000 0001 0373 7343" | "PLN"    | "123.45"
-        "78743420-8ce9-11ec-b0d0-57b77255c208" | "75 1240 2034 1111 0000 0306 8582" | "EUR"    | "456.78"
+        "fa07c538-8ce4-11ec-9ad5-4f5a625cd744" | "65 1090 1665 0000 0001 0373 7343" | "PLN"    | 123.45
+        "78743420-8ce9-11ec-b0d0-57b77255c208" | "75 1240 2034 1111 0000 0306 8582" | "EUR"    | 456.78
     }
 
 

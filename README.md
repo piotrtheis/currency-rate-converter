@@ -6,7 +6,11 @@ This is an example project that calculates the amount balance to a given currenc
 * Gradle 7.4 (you can use the gradle wrapper instead)
 
 # REST API
+
+[Open API docs](http://localhost:8080/api-docs)
+
 ## Get account
+
 Endpoints:
 * `GET /accounts/{id}`
 * `GET /accounts/number={number}`
@@ -31,12 +35,8 @@ Will produce:
         "amount": 27.27,
         "currency": "EUR"
     },
-    "id": {
-        "value": "fa07c538-8ce4-11ec-9ad5-4f5a625cd744"
-    },
-    "number": {
-        "value": "65 1090 1665 0000 0001 0373 7343"
-    }
+    "id": "fa07c538-8ce4-11ec-9ad5-4f5a625cd744",
+    "number": "65 1090 1665 0000 0001 0373 7343"
 }
 ```
 
