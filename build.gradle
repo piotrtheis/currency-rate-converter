@@ -4,9 +4,8 @@ plugins {
     // Apply the groovy plugin to also add support for Groovy (needed for Spock)
     id 'groovy'
     id 'org.unbroken-dome.test-sets' version '4.0.0'
-
-    id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.micronaut.application") version "3.3.0"
+    id 'com.github.johnrengelman.shadow' version "7.1.2"
+    id 'io.micronaut.application' version "3.3.0"
 }
 
 repositories {
@@ -35,38 +34,29 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
-    annotationProcessor("io.micronaut:micronaut-http-validation")
-    annotationProcessor("io.micronaut.spring:micronaut-spring-annotation")
-    annotationProcessor("io.micronaut.spring:micronaut-spring-boot")
-    annotationProcessor("io.micronaut.spring:micronaut-spring-web-annotation")
-    implementation("io.micronaut:micronaut-http-client")
-    implementation("io.micronaut:micronaut-http-server")
-    implementation("io.micronaut:micronaut-jackson-databind")
-    implementation("io.micronaut:micronaut-runtime")
-    implementation("jakarta.annotation:jakarta.annotation-api")
-    implementation("org.springframework.boot:spring-boot-starter")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    runtimeOnly("ch.qos.logback:logback-classic")
-    runtimeOnly("io.micronaut.spring:micronaut-spring-boot")
-    runtimeOnly("io.micronaut.spring:micronaut-spring-web")
-    testAnnotationProcessor("io.micronaut.spring:micronaut-spring-annotation")
-    testAnnotationProcessor("io.micronaut.spring:micronaut-spring-boot")
-    testAnnotationProcessor("io.micronaut.spring:micronaut-spring-web-annotation")
-    implementation("io.micronaut:micronaut-validation")
-    implementation "io.micronaut:micronaut-http-server-netty"
+    annotationProcessor 'io.micronaut:micronaut-http-validation'
+    annotationProcessor 'io.micronaut.spring:micronaut-spring-annotation'
+    annotationProcessor 'io.micronaut.spring:micronaut-spring-boot'
 
-    annotationProcessor("io.micronaut.openapi:micronaut-openapi:4.0.0")
-    implementation("io.swagger.core.v3:swagger-annotations")
+    implementation 'io.micronaut:micronaut-http-client'
+    implementation 'io.micronaut:micronaut-http-server'
+    implementation 'io.micronaut:micronaut-jackson-databind'
+    implementation 'io.micronaut:micronaut-runtime'
+    implementation 'jakarta.annotation:jakarta.annotation-api'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'io.micronaut:micronaut-validation'
+    implementation 'io.micronaut:micronaut-http-server-netty'
 
-    implementation 'org.springframework.boot:spring-boot-starter-web:2.6.3'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
+    runtimeOnly 'ch.qos.logback:logback-classic'
+    runtimeOnly 'io.micronaut.spring:micronaut-spring-boot'
+
+    annotationProcessor 'io.micronaut.openapi:micronaut-openapi:4.0.0'
+    implementation 'io.swagger.core.v3:swagger-annotations'
+
     implementation 'io.github.openfeign:feign-httpclient:11.8'
     implementation 'io.github.openfeign:feign-jackson:11.8'
     implementation 'io.github.openfeign:feign-hystrix:11.8'
     implementation 'io.github.openfeign:feign-slf4j:11.8'
-
-    implementation 'org.springdoc:springdoc-openapi-ui:1.6.6'
-    implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.6.6'
 
     // Use the latest Groovy version for Spock testing
     testImplementation 'org.codehaus.groovy:groovy:3.0.9'
@@ -96,10 +86,9 @@ micronaut {
 }
 
 
-
 tasks.named('test') {
     useJUnitPlatform()
 }
-tasks.named("integrationTest") {
+tasks.named('integrationTest') {
     useJUnitPlatform()
 }

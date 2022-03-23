@@ -15,7 +15,6 @@ import pl.cleankod.exchange.core.usecase.FindAccountAndConvertCurrencyIfPossible
 import pl.cleankod.exchange.core.usecase.FindAccountAndConvertCurrencyUseCase;
 import pl.cleankod.exchange.core.usecase.FindAccountUseCase;
 import pl.cleankod.exchange.entrypoint.AccountController;
-import pl.cleankod.exchange.entrypoint.ExceptionHandlerAdvice;
 import pl.cleankod.exchange.provider.AccountInMemoryRepository;
 import pl.cleankod.exchange.provider.CurrencyConversionNbpService;
 import pl.cleankod.exchange.provider.nbp.CachedExchangeRatesNbpClient;
@@ -89,10 +88,5 @@ public class ExchangeConfiguration {
     @Bean
     AccountController accountController(FindAccountAndConvertCurrencyIfPossibleUseCase findAndConvertUseCase) {
         return new AccountController(findAndConvertUseCase);
-    }
-
-    @Bean
-    ExceptionHandlerAdvice exceptionHandlerAdvice() {
-        return new ExceptionHandlerAdvice();
     }
 }

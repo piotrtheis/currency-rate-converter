@@ -7,7 +7,7 @@ This is an example project that calculates the amount balance to a given currenc
 
 # REST API
 
-[Open API docs](http://localhost:8080/api-docs)
+[Open API docs](http://localhost:8080/swagger/Converter-service-0.0.1.yml)
 
 ## Get account
 
