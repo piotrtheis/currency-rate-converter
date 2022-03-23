@@ -6,8 +6,8 @@ import feign.hystrix.HystrixFeign;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.slf4j.Slf4jLogger;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import io.micronaut.context.annotation.Bean;
+import io.micronaut.context.annotation.Factory;
 import org.springframework.core.env.Environment;
 import pl.cleankod.exchange.core.gateway.AccountRepository;
 import pl.cleankod.exchange.core.gateway.CurrencyConversionService;
@@ -26,7 +26,7 @@ import pl.cleankod.util.cache.InMemoryCache;
 import java.time.Duration;
 import java.util.Currency;
 
-@Configuration
+@Factory
 public class ExchangeConfiguration {
 
     @Bean

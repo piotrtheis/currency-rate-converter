@@ -33,10 +33,7 @@ dependencies {
     // Annotation processors:
     compileOnly 'org.projectlombok:lombok:1.18.22'
     annotationProcessor 'org.projectlombok:lombok:1.18.22'
-
     annotationProcessor 'io.micronaut:micronaut-http-validation'
-    annotationProcessor 'io.micronaut.spring:micronaut-spring-annotation'
-    annotationProcessor 'io.micronaut.spring:micronaut-spring-boot'
 
     implementation 'io.micronaut:micronaut-http-client'
     implementation 'io.micronaut:micronaut-http-server'
