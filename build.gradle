@@ -27,6 +27,9 @@ testSets {
     integrationTest
 }
 
+check.dependsOn integrationTest
+check.dependsOn jacocoTestReport
+
 dependencies {
     // Annotation processors:
     compileOnly 'org.projectlombok:lombok:1.18.22'
