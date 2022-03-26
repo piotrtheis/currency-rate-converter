@@ -24,6 +24,10 @@ class AccountSpecification extends BaseApplicationSpecification {
                 WireMock.get("/exchangerates/rates/A/EUR/2022-02-08")
                         .willReturn(WireMock.ok(body))
         )
+        wireMockServer.stubFor(
+                WireMock.get("/exchangerates/rates/A/PLN/2022-02-08")
+                        .willReturn(WireMock.badRequest())
+        )
     }
 
     def cleanupSpec() {
