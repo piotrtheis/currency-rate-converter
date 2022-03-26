@@ -36,6 +36,21 @@ class MoneySpecification extends Specification {
         "123.45"    | null
     }
 
+    def "should not create object using constructor due to null value"() {
+        when:
+        Money.of(givenAmount, givenCurrency)
+
+        then:
+        def exception = thrown(NullPointerException)
+        exception.message.startsWith("Given value cannot be null")
+
+        where:
+        givenAmount | givenCurrency
+        null        | null
+        null        | "PLN"
+        "123.45"    | null
+    }
+
     def "should not create object due to incorrect currency value"() {
         when:
         Money.of("123.45", givenCurrency)
@@ -56,5 +71,52 @@ class MoneySpecification extends Specification {
 
         where:
         givenAmount << ["EUR", "\0", "123,45"]
+    }
+
+    def "division by constant values should be scaled"() {
+        given:
+        def money = Money.of(dividend, "EUR")
+
+        expect:
+        money.divideBy(new BigDecimal(divisor)).amount() == rezult
+
+        where:
+        dividend       | divisor        || rezult
+        "-1"           | "4.5"          || -0.22
+        "99.8"         | "4"            || 24.95
+    }
+
+    def "should exchange amount by the given rate"() {
+        given:
+        def eurPlnPair = new CurrencyPair(
+                Currency.getInstance("EUR"),
+                Currency.getInstance("PLN")
+        )
+        def rate = new CurrencyRate(eurPlnPair, new BigDecimal("4.5"))
+        def money = Money.of("450", "PLN")
+
+        when:
+        def exchanged = money.exchange(rate)
+
+        then:
+        exchanged.amount() == 100
+        exchanged.currencyCode() == "EUR"
+    }
+
+    def "should ignore exchange for the same pair"() {
+        given:
+        def eurPlnPair = new CurrencyPair(
+                Currency.getInstance("EUR"),
+                Currency.getInstance("PLN")
+        )
+        def rate = new CurrencyRate(eurPlnPair, new BigDecimal("4.5"))
+        def money = Money.of("100", "EUR")
+
+        when:
+        def exchanged = money.exchange(rate)
+
+        then:
+        exchanged.amount() == 100
+        exchanged.currencyCode() == "EUR"
     }
 }
